@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "dj-to-do"
+version = "0.1.0"
+description = "Django To-Do App"
+authors = ["enriquedlh97 <enriquedlh97@hotmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "dj_to_do"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Django = "^4.1.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
