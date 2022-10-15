@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "dj-to-do"
+version = "0.1.0"
+description = "Django To-Do App"
+authors = ["enriquedlh97 <enriquedlh97@hotmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "dj_to_do"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Django = "^4.1.2"
+pre-commit = "^2.20.0"
+black = "^22.10.0"
+flake8 = "^5.0.4"
+isort = "^5.10.1"
+pydocstyle = "^6.1.1"
+mypy = "^0.982"
+
+[tool.black]
+line-length = 79
+
+[tool.isort]
+profile = "black"
+line_length = 79
+
+[tool.pydocstyle]
+convention = "google"
+add-ignore = "D100,D101,D102,D103,D104,D105,D106,D107"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
