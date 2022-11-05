@@ -17,6 +17,9 @@ isort = "^5.10.1"
 pydocstyle = "^6.1.1"
 mypy = "^0.982"
 
+[tool.poetry.group.dev.dependencies]
+django-stubs = "^1.13.0"
+
 [tool.black]
 line-length = 79
 
@@ -27,6 +30,12 @@ line_length = 79
 [tool.pydocstyle]
 convention = "google"
 add-ignore = "D100,D101,D102,D103,D104,D105,D106,D107"
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "myproject.settings"
 
 [build-system]
 requires = ["poetry-core"]

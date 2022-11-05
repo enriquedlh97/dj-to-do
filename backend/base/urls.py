@@ -1,7 +1,10 @@
-from django.urls import path
+from django.urls import URLPattern, path
 
-from . import views
+from .views import TaskCreate, TaskDetail, TaskList
 
-urlpatterns = [
-    path("", views.task_list, name="tasks"),
+urlpatterns: list[URLPattern] = [
+    path("", TaskList.as_view(), name="tasks"),
+    # The view here looks for a primary key referencing a specific task.
+    path("task/<int:pk>/", TaskDetail.as_view(), name="task"),
+    path("task-create/", TaskCreate.as_view(), name="task-create"),
 ]
