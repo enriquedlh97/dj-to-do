@@ -1,7 +1,7 @@
-from django.urls import path
+from django.urls import URLPattern, path
 
-from . import views
+from .views import TaskList
 
-urlpatterns = [
-    path("", views.task_list, name="tasks"),
+urlpatterns: list[URLPattern] = [
+    path("", TaskList.as_view(), name="tasks"),
 ]

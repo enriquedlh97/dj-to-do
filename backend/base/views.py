@@ -1,6 +1,8 @@
-from django.core.handlers.wsgi import WSGIRequest  # type:ignore
-from django.http import HttpResponse  # type: ignore
+from django.db.models.base import ModelBase
+from django.views.generic.list import ListView
+
+from .models import Task
 
 
-def task_list(request: WSGIRequest) -> HttpResponse:
-    return HttpResponse("To Do List")
+class TaskList(ListView):
+    model: ModelBase = Task
