@@ -6,3 +6,4 @@ from .models import Task
 
 class TaskList(ListView):
     model: ModelBase = Task
+    context_object_name: str = "tasks"
