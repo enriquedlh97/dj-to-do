@@ -3,7 +3,7 @@ from typing import Callable, Literal, Optional, Sequence, Type
 from django.db.models import Model
 from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 
 from .models import Task
@@ -34,7 +34,7 @@ class TaskDetail(DetailView):
     """
 
     model: Type[Model] = Task
-    content_type: Optional[str] = "task"
+    context_object_name: Optional[str] = "task"
     template_name: str = "base/task.html"
 
 
@@ -53,4 +53,38 @@ class TaskCreate(CreateView):
     # Specifies fields to show in form, this shows all fields from the model
     fields: Optional[Sequence[str] | Literal["__all__"]] = "__all__"
     # Redirects back to the list of tasks once the new task is created
+    success_url: Optional[str | Callable[[str], str]] = reverse_lazy("tasks")
+
+
+class TaskUpdate(UpdateView):
+    """Task Update View: Updates a Task.
+
+    Attributes:
+        model (Model): Model for the view.
+        fields (`list` of `str` or `literal`): Fields to be shown in the
+            form.
+        success_url (`str` or `callable`): Function to be used when the
+            form is completed.
+    """
+
+    model: Type[Model] = Task
+    # Specifies fields to show in form, this shows all fields from the model
+    fields: Optional[Sequence[str] | Literal["__all__"]] = "__all__"
+    # Redirects back to the list of tasks once the new task is created
+    success_url: Optional[str | Callable[[str], str]] = reverse_lazy("tasks")
+
+
+class TaskDelete(DeleteView):
+    """Task Delete View: Deletes a task.
+
+    Attributes:
+        model (Model): Model for the view.
+        context_object_name (str): Name to reference the object within
+            the 'task_confirm_delete.html' template.
+        success_url (`str` or `callable`): Function to be used when the
+            form is completed.
+    """
+
+    model: Type[Model] = Task
+    context_object_name: str = "task"
     success_url: Optional[str | Callable[[str], str]] = reverse_lazy("tasks")
