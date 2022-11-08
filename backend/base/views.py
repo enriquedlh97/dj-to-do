@@ -1,13 +1,21 @@
 from typing import Any, Callable, Literal, Optional, Sequence, Type
 
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.db.models import Model
-from django.forms import BaseModelForm
+from django.forms import BaseForm, BaseModelForm
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.edit import (
+    CreateView,
+    DeleteView,
+    FormView,
+    UpdateView,
+)
 from django.views.generic.list import ListView
 
 from .models import Task
@@ -31,6 +39,51 @@ class CustomLoginView(LoginView):
 
     def get_success_url(self) -> str:
         return reverse_lazy("tasks")
+
+
+class RegisterPageView(FormView):
+    """View for Registering a User.
+
+    Attributes:
+        template_name: Name of the html template to be sued for the login
+            form.
+        form_class: The type of form to use.
+        redirect_authenticated_user: Where the user is redirected once the
+        form is successfully submitted.
+        success_url: Function to be used when the
+            form is completed.
+    """
+
+    template_name: str = "base/register.html"
+    form_class: Optional[Type[BaseForm]] = UserCreationForm
+    redirect_authenticated_user: bool = True
+    success_url: Optional[str | Callable[..., Any]] = reverse_lazy("tasks")
+
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        """Creates form for the current user only.
+
+        Args:
+            form: Form object for the specific current user.
+
+        Returns:
+            HttpResponse to create the form.
+        """
+        # Makes sure user is logged in
+        user = form.save()
+        if user is not None:
+            login(self.request, user)
+        return super(RegisterPageView, self).form_valid(form)
+
+    def get(self, *args, **kwargs) -> HttpResponse:
+        """Makes sure authenticated users cannot access register page.
+
+        Returns:
+            HttpResponse to redirect to the 'tasks' page or to continue
+            registering.
+        """
+        if self.request.user.is_authenticated:
+            return redirect("tasks")
+        return super(RegisterPageView, self).get(*args, **kwargs)
 
 
 class TaskList(LoginRequiredMixin, ListView):
