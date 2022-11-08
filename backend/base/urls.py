@@ -3,6 +3,7 @@ from django.urls import URLPattern, path
 
 from .views import (
     CustomLoginView,
+    RegisterPageView,
     TaskCreate,
     TaskDelete,
     TaskDetail,
@@ -13,6 +14,7 @@ from .views import (
 urlpatterns: list[URLPattern] = [
     path("login/", CustomLoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(next_page="login"), name="logout"),
+    path("register/", RegisterPageView.as_view(), name="register"),
     path("", TaskList.as_view(), name="tasks"),
     # The view here looks for a primary key referencing a specific task.
     path("task/<int:pk>/", TaskDetail.as_view(), name="task"),
