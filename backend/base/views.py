@@ -114,6 +114,15 @@ class TaskList(LoginRequiredMixin, ListView):
         # Defines count of incomplete items
         context["count"] = context["tasks"].filter(complete=False).count()
 
+        search_input: str = self.request.GET.get("search-area") or ""
+
+        if search_input:
+            context["tasks"] = context["tasks"].filter(
+                title__startswith=search_input
+            )
+
+        context["search_input"] = search_input
+
         return context
 
 
