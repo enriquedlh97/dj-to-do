@@ -1,5 +1,7 @@
 from typing import Callable, Literal, Optional, Sequence, Type
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
 from django.db.models import Model
 from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
@@ -9,12 +11,35 @@ from django.views.generic.list import ListView
 from .models import Task
 
 
-class TaskList(ListView):
-    """Task List View: Contains all the tasks displayed.
+class CustomLoginView(LoginView):
+    """Task Custom Login View: Logs a user in.
 
     Attributes:
-        model (Model): Model for the view.
-        context_object_name (str): Name to reference the object within
+        template_name: Name of the html template to be sued for the login
+            form.
+        fields: Fields to be shown in the
+            form.
+        success_url: Function to be used when the
+            form is completed.
+    """
+
+    template_name: str = "base/login.html"
+    fields: Optional[Sequence[str] | Literal["__all__"]] = "__all__"
+    redirect_authenticated_user: bool = True
+
+    def get_success_url(self) -> str:
+        return reverse_lazy("tasks")
+
+
+class TaskList(LoginRequiredMixin, ListView):
+    """Task List View: Contains all the tasks displayed.
+
+    By inheriting from 'LoginRequiredMixin', we set a requirement for
+    the user to be logged in in order to be able to make modifications.
+
+    Attributes:
+        model: Model for the view.
+        context_object_name: Name to reference the object within
             the 'task_list.html' template.
     """
 
@@ -26,10 +51,10 @@ class TaskDetail(DetailView):
     """Task Detail View: Shows the details for a particular Task.
 
     Attributes:
-        model (Model): Model for the view.
-        context_object_name (str): Name to reference the object within
+        model: Model for the view.
+        context_object_name: Name to reference the object within
             the 'task_detail.html' template.
-        template_name (str): Name to use for the template instead of
+        template_name: Name to use for the template instead of
             'task_detail.html'.
     """
 
@@ -42,10 +67,10 @@ class TaskCreate(CreateView):
     """Task Create View: Creates a Task.
 
     Attributes:
-        model (Model): Model for the view.
-        fields (`list` of `str` or `literal`): Fields to be shown in the
+        model: Model for the view.
+        fields: Fields to be shown in the
             form.
-        success_url (`str` or `callable`): Function to be used when the
+        success_url: Function to be used when the
             form is completed.
     """
 
@@ -61,9 +86,9 @@ class TaskUpdate(UpdateView):
 
     Attributes:
         model (Model): Model for the view.
-        fields (`list` of `str` or `literal`): Fields to be shown in the
+        fields: Fields to be shown in the
             form.
-        success_url (`str` or `callable`): Function to be used when the
+        success_url: Function to be used when the
             form is completed.
     """
 
@@ -78,10 +103,10 @@ class TaskDelete(DeleteView):
     """Task Delete View: Deletes a task.
 
     Attributes:
-        model (Model): Model for the view.
-        context_object_name (str): Name to reference the object within
+        model: Model for the view.
+        context_object_name: Name to reference the object within
             the 'task_confirm_delete.html' template.
-        success_url (`str` or `callable`): Function to be used when the
+        success_url: Function to be used when the
             form is completed.
     """
 

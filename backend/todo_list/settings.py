@@ -113,6 +113,8 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Indicates the url to where the user is redirected if it is not authenticated
+LOGIN_URL = "login"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
